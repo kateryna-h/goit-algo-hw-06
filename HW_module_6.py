@@ -39,13 +39,11 @@ class Record:
         self.add_phone(new_phone)
         self.remove_phone(old_phone)
 
-    
     def find_phone(self, phone: str):
         for i in self.phones:
             if i.value == phone:
                 return i
         return None
-
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(i.value for i in self.phones)}"
@@ -62,8 +60,7 @@ class AddressBook(UserDict):
     
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
-    
-        
+       
 # Створення нової адресної книги
 book = AddressBook()
 
