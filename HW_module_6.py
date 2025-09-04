@@ -1,5 +1,4 @@
 from collections import UserDict
-import HW_5
 
 class Field:
     def __init__(self, value):
@@ -13,11 +12,13 @@ class Name(Field):
 		pass
 
 class Phone(Field):
-     def __init__(self, phone):
-        if len(phone) < 10:
-            super().__init__("Phone is too short")   
-        elif len(phone) > 10:
-            super().__init__("Phone is too long")  
+    def __init__(self, value):
+        if not self.phone_validation(value):
+            raise ValueError
+        super().__init__(value)
+
+    def phone_validation(self, value):
+        return len(value) == 10 and value.isnumeric()
 
 class Record:
     def __init__(self, name):
@@ -33,29 +34,31 @@ class Record:
         
     def edit_phone(self, old_phone, new_phone):
         phone_number = self.find_phone(old_phone)
-        if phone_number:
-            phone_number.value = new_phone
+        if not phone_number:
             raise ValueError
+        self.add_phone(new_phone)
+        self.remove_phone(old_phone)
+
     
     def find_phone(self, phone: str):
-         for i in self.phones:
-              if i.value == phone:
-                   return i
-              return None
+        for i in self.phones:
+            if i.value == phone:
+                return i
+        return None
 
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(i.value for i in self.phones)}"
 
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
     def find(self, name: str):
-           return self.data.get(name)
+        return self.data.get(name)
         
     def delete(self, name):
-           return self.data.pop(name, None)
+        return self.data.pop(name, None)
     
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
